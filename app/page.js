@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const SKILLS = [
   {
@@ -107,6 +107,45 @@ const AWARDS = [
   { icon: '🥉', name: 'Olympia — Third Prize (Weekly Round)', org: 'Đường Lên Đỉnh Olympia — National TV Academic Competition · Sponsored by THACO', year: '2021' },
 ];
 
+const CREDENTIALS = [
+  {
+    img: '/certs/IMG_9490.JPG',
+    label: 'Best Creativity Award',
+    org: 'GXNU — Chinese Government Scholarship Program 2025',
+    tag: 'Certificate of Honor',
+  },
+  {
+    img: '/certs/IMG_9491.JPG',
+    label: 'Certificate of Completion',
+    org: 'Guangxi Normal University · 92h AI Technology & Application Practice',
+    tag: 'Guangxi Normal University',
+  },
+  {
+    img: '/certs/z7842181716669_2639e8b6eadae77cd16200efeb3348fd.jpg',
+    label: 'VIFOTEC Encouragement Prize',
+    org: 'National Science & Technology Award for University Students 2025',
+    tag: 'VIFOTEC · National',
+  },
+  {
+    img: '/certs/z7842199373017_4a54f1b6b813d9760cc5568f79575595.jpg',
+    label: 'Official Award Decision QD3149',
+    org: 'Ministry of Education & Training · VIFOTEC Award Confirmation',
+    tag: 'Ministry of Education',
+  },
+  {
+    img: '/certs/z7842199377391_30590b5d69a4694a20db8729f1ecc197.jpg',
+    label: 'Published Conference Proceedings',
+    org: '28th VNICT National ICT Conference · Ninh Binh, November 2025',
+    tag: 'Published Paper',
+  },
+  {
+    img: '/certs/IMG_7687.JPG',
+    label: 'Olympia Trophy',
+    org: 'Đường Lên Đỉnh Olympia — Third Prize, Weekly Round · THACO',
+    tag: 'National TV Competition',
+  },
+];
+
 const EDUCATION = [
   {
     school: 'Hanoi University',
@@ -132,6 +171,7 @@ const EDUCATION = [
 
 export default function Portfolio() {
   const revealRefs = useRef([]);
+  const [lightbox, setLightbox] = useState(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -167,6 +207,7 @@ export default function Portfolio() {
             <li><a href="#projects">Projects</a></li>
             <li><a href="#research">Research</a></li>
             <li><a href="#awards">Awards</a></li>
+            <li><a href="#credentials">Credentials</a></li>
           </ul>
           <a href="mailto:nguyenanhsangai@gmail.com" className="nav-cta">Hire me</a>
         </div>
@@ -367,6 +408,68 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+
+      {/* CREDENTIALS */}
+      <section id="credentials">
+        <div className="container">
+          <div ref={addReveal} className="reveal">
+            <div className="section-label">// Verified</div>
+            <h2 className="section-title">Credentials</h2>
+            <p className="section-subtitle">
+              Real certificates, official decisions, and published proceedings — click any card to view full size.
+            </p>
+          </div>
+          <div className="section-divider" />
+          <div className="creds-grid">
+            {CREDENTIALS.map((c, i) => (
+              <button
+                ref={addReveal}
+                className="reveal cert-card"
+                key={i}
+                style={{ transitionDelay: `${i * 0.08}s` }}
+                onClick={() => setLightbox(i)}
+                aria-label={`View ${c.label}`}
+              >
+                <div className="cert-thumb">
+                  <img src={c.img} alt={c.label} loading="lazy" />
+                  <div className="cert-overlay">
+                    <span className="cert-zoom">⊕ View</span>
+                  </div>
+                </div>
+                <div className="cert-info">
+                  <div className="cert-tag">{c.tag}</div>
+                  <div className="cert-label">{c.label}</div>
+                  <div className="cert-org">{c.org}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* LIGHTBOX */}
+      {lightbox !== null && (
+        <div className="lightbox-overlay" onClick={() => setLightbox(null)}>
+          <button className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Close">✕</button>
+          <button
+            className="lightbox-nav lightbox-prev"
+            onClick={(e) => { e.stopPropagation(); setLightbox((lightbox - 1 + CREDENTIALS.length) % CREDENTIALS.length); }}
+            aria-label="Previous"
+          >‹</button>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <img src={CREDENTIALS[lightbox].img} alt={CREDENTIALS[lightbox].label} />
+            <div className="lightbox-caption">
+              <div className="lightbox-title">{CREDENTIALS[lightbox].label}</div>
+              <div className="lightbox-sub">{CREDENTIALS[lightbox].org}</div>
+            </div>
+          </div>
+          <button
+            className="lightbox-nav lightbox-next"
+            onClick={(e) => { e.stopPropagation(); setLightbox((lightbox + 1) % CREDENTIALS.length); }}
+            aria-label="Next"
+          >›</button>
+        </div>
+      )}
 
       {/* EDUCATION */}
       <section id="education">
